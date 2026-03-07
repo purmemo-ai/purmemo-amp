@@ -34,9 +34,9 @@
   },
   "keywords": ["amp", "ai-memory-protocol", "chatgpt", "converter", "portability", "purmemo"],
   "license": "Apache-2.0",
-  "homepage": "https://github.com/purmemo/purmemo-amp",
+  "homepage": "https://github.com/purmemo-ai/purmemo-amp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/purmemo/purmemo-amp"
+    "url": "https://github.com/purmemo-ai/purmemo-amp"
   }
 }

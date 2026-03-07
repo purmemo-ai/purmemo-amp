@@ -2,7 +2,7 @@
 import { Command } from 'commander'
 import { readFileSync, writeFileSync } from 'fs'
 import { resolve, basename, extname } from 'path'
-import { convertChatGPTExport, convertClaudeExport } from '@purmemo.ai/converters'
+import { convertChatGPTExport, convertClaudeExport, convertGeminiExport, convertCursorExport } from '@purmemo.ai/converters'
 import { parseAMPExport } from '@purmemo.ai/schema'
 
 const program = new Command()
@@ -61,11 +61,26 @@ program
 
     // Auto-detect platform if not specified
     let platform = opts.platform
-    if (platform === 'chatgpt' && Array.isArray(raw)) {
-      const first = (raw as Record<string, unknown>[])[0]
-      if (first && first['uuid'] && first['chat_messages']) {
-        platform = 'claude'
-        console.log('🔍 Auto-detected: Claude export')
+    if (platform === 'chatgpt') {
+      if (Array.isArray(raw)) {
+        const first = (raw as Record<string, unknown>[])[0]
+        if (first && first['uuid'] && first['chat_messages']) {
+          platform = 'claude'
+          console.log('🔍 Auto-detected: Claude export')
+        } else if (first && first['messages'] && Array.isArray((first as Record<string, unknown>)['messages'])) {
+          const msgs = (first as Record<string, unknown[]>)['messages']
+          if (msgs.length > 0 && (msgs[0] as Record<string, unknown>)['role'] === 'user' &&
+              (msgs[0] as Record<string, unknown>)['parts']) {
+            platform = 'gemini'
+            console.log('🔍 Auto-detected: Gemini export')
+          }
+        }
+      } else if (typeof raw === 'object' && raw !== null) {
+        const obj = raw as Record<string, unknown>
+        if (Array.isArray(obj['conversations'])) {
+          platform = 'cursor'
+          console.log('🔍 Auto-detected: Cursor export')
+        }
       }
     }
 
@@ -79,10 +94,15 @@ program
         case 'claude':
           ampExport = convertClaudeExport(raw)
           break
+        case 'gemini':
+          ampExport = convertGeminiExport(raw)
+          break
+        case 'cursor':
+          ampExport = convertCursorExport(raw)
+          break
         default:
           console.error(`Platform "${platform}" is not yet supported.`)
-          console.error('Supported platforms: chatgpt, claude')
-          console.error('Gemini and Cursor converters coming soon.')
+          console.error('Supported platforms: chatgpt, claude, gemini, cursor')
           process.exit(1)
       }
     } catch (err) {

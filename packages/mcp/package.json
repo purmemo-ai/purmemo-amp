@@ -1,5 +1,5 @@
 {
-  "name": "@purmemo/mcp",
+  "name": "@purmemo.ai/mcp",
   "version": "0.1.0",
   "description": "Reference MCP server for AMP — expose AI memories via Model Context Protocol",
   "type": "module",
@@ -21,7 +21,7 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@purmemo/schema": "workspace:*",
+    "@purmemo.ai/schema": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.0.0"
   },
   "devDependencies": {

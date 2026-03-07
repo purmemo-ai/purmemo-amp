@@ -1,5 +1,5 @@
 {
-  "name": "@purmemo/schema",
+  "name": "@purmemo.ai/schema",
   "version": "0.1.0",
   "description": "AMP v0.1 schema — TypeScript types and Zod validators for the AI Memory Protocol",
   "type": "module",

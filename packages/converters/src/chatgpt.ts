@@ -1,5 +1,5 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo/schema'
-import { AMP_VERSION } from '@purmemo/schema'
+import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import { AMP_VERSION } from '@purmemo.ai/schema'
 
 // ============================================================
 // ChatGPT → AMP Converter

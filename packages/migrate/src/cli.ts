@@ -2,8 +2,8 @@
 import { Command } from 'commander'
 import { readFileSync, writeFileSync } from 'fs'
 import { resolve, basename, extname } from 'path'
-import { convertChatGPTExport } from '@purmemo/converters'
-import { parseAMPExport } from '@purmemo/schema'
+import { convertChatGPTExport } from '@purmemo.ai/converters'
+import { parseAMPExport } from '@purmemo.ai/schema'
 
 const program = new Command()
 

@@ -1,5 +1,5 @@
 {
-  "name": "@purmemo/migrate",
+  "name": "@purmemo.ai/migrate",
   "version": "0.1.0",
   "description": "CLI tool to migrate AI conversations to AMP format — supports ChatGPT, Claude, Gemini, Cursor",
   "type": "module",
@@ -24,8 +24,8 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@purmemo/converters": "workspace:*",
-    "@purmemo/schema": "workspace:*",
+    "@purmemo.ai/converters": "workspace:*",
+    "@purmemo.ai/schema": "workspace:*",
     "commander": "^12.0.0"
   },
   "devDependencies": {

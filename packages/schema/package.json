@@ -1,0 +1,38 @@
+{
+  "name": "@purmemo/schema",
+  "version": "0.1.0",
+  "description": "AMP v0.1 schema — TypeScript types and Zod validators for the AI Memory Protocol",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "test": "vitest run",
+    "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": ["amp", "ai-memory-protocol", "conversation-portability", "schema", "zod", "purmemo"],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/purmemo/purmemo-amp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/purmemo/purmemo-amp"
+  }
+}

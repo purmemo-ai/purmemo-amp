@@ -1,0 +1,42 @@
+{
+  "name": "@purmemo/converters",
+  "version": "0.1.0",
+  "description": "Platform converters for AMP — parse ChatGPT, Claude, Gemini, and Cursor exports into AMP format",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./chatgpt": {
+      "import": "./dist/chatgpt.js",
+      "types": "./dist/chatgpt.d.ts"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup src/index.ts src/chatgpt.ts --format esm --dts",
+    "test": "vitest run",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@purmemo/schema": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": ["amp", "ai-memory-protocol", "chatgpt", "converter", "portability", "purmemo"],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/purmemo/purmemo-amp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/purmemo/purmemo-amp"
+  }
+}

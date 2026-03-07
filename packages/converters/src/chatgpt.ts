@@ -12,6 +12,7 @@ interface ChatGPTContentPart {
   content_type: string
   parts?: (string | object)[]
   text?: string
+  result?: string      // tether_browsing_display
   [key: string]: unknown
 }
 
@@ -53,7 +54,7 @@ interface ChatGPTConversation {
 function extractContent(content: ChatGPTContentPart): string {
   if (!content) return ''
 
-  // Simple text content
+  // Standard text
   if (content.content_type === 'text' && Array.isArray(content.parts)) {
     return content.parts
       .map((p) => (typeof p === 'string' ? p : ''))
@@ -61,14 +62,43 @@ function extractContent(content: ChatGPTContentPart): string {
       .trim()
   }
 
-  // Code output
+  // GPT-4o multimodal: mixed text + image parts
+  // Text parts are strings; image parts are objects — extract only text
+  if (content.content_type === 'multimodal_text' && Array.isArray(content.parts)) {
+    return content.parts
+      .map((p) => {
+        if (typeof p === 'string') return p
+        // Inline text node inside multimodal content
+        if (typeof p === 'object' && p !== null) {
+          const part = p as Record<string, unknown>
+          if (part.content_type === 'text' && typeof part.text === 'string') return part.text
+          if (typeof part.text === 'string') return part.text
+        }
+        return ''
+      })
+      .filter(Boolean)
+      .join('')
+      .trim()
+  }
+
+  // Code interpreter output
   if (content.content_type === 'code' && typeof content.text === 'string') {
     return content.text.trim()
   }
 
-  // Tether quote (web browsing citations)
+  // Tether quote (web browsing citation)
   if (content.content_type === 'tether_quote') {
     return typeof content.text === 'string' ? content.text.trim() : ''
+  }
+
+  // Tether browsing display (search result snippet shown inline)
+  if (content.content_type === 'tether_browsing_display') {
+    return typeof content.result === 'string' ? content.result.trim() : ''
+  }
+
+  // Execution output (code interpreter result)
+  if (content.content_type === 'execution_output' && typeof content.text === 'string') {
+    return content.text.trim()
   }
 
   // Fallback: join any string parts

@@ -2,7 +2,7 @@
 import { Command } from 'commander'
 import { readFileSync, writeFileSync } from 'fs'
 import { resolve, basename, extname } from 'path'
-import { convertChatGPTExport } from '@purmemo.ai/converters'
+import { convertChatGPTExport, convertClaudeExport } from '@purmemo.ai/converters'
 import { parseAMPExport } from '@purmemo.ai/schema'
 
 const program = new Command()
@@ -59,17 +59,30 @@ program
       process.exit(1)
     }
 
+    // Auto-detect platform if not specified
+    let platform = opts.platform
+    if (platform === 'chatgpt' && Array.isArray(raw)) {
+      const first = (raw as Record<string, unknown>[])[0]
+      if (first && first['uuid'] && first['chat_messages']) {
+        platform = 'claude'
+        console.log('🔍 Auto-detected: Claude export')
+      }
+    }
+
     // Convert
     let ampExport: ReturnType<typeof convertChatGPTExport>
     try {
-      switch (opts.platform) {
+      switch (platform) {
         case 'chatgpt':
           ampExport = convertChatGPTExport(raw)
           break
+        case 'claude':
+          ampExport = convertClaudeExport(raw)
+          break
         default:
-          console.error(`Platform "${opts.platform}" is not yet supported.`)
-          console.error('Supported platforms: chatgpt')
-          console.error('Claude, Gemini, and Cursor converters coming soon.')
+          console.error(`Platform "${platform}" is not yet supported.`)
+          console.error('Supported platforms: chatgpt, claude')
+          console.error('Gemini and Cursor converters coming soon.')
           process.exit(1)
       }
     } catch (err) {
@@ -172,17 +185,31 @@ program
       return
     }
 
-    // Raw ChatGPT export
-    if (Array.isArray(raw)) {
-      const conversations = raw as Array<{ title?: string; mapping?: object }>
-      const totalMessages = conversations.reduce(
-        (s, c) => s + (c.mapping ? Object.keys(c.mapping).length : 0),
-        0
-      )
-      console.log(`\n📦 Raw export (detected: chatgpt)`)
-      console.log(`   Conversations: ${conversations.length}`)
-      console.log(`   Total nodes:   ${totalMessages} (includes branches)`)
-      console.log(`\nRun: purmemo-migrate import <file> --platform chatgpt`)
+    // Raw export — detect platform
+    if (Array.isArray(raw) && raw.length > 0) {
+      const first = (raw as Record<string, unknown>[])[0]
+      const isClauде = first['uuid'] && first['chat_messages']
+      const conversations = raw as Array<Record<string, unknown>>
+
+      if (isClauде) {
+        const totalMessages = conversations.reduce(
+          (s, c) => s + (Array.isArray(c['chat_messages']) ? (c['chat_messages'] as unknown[]).length : 0),
+          0
+        )
+        console.log(`\n📦 Raw export (detected: claude)`)
+        console.log(`   Conversations: ${conversations.length}`)
+        console.log(`   Total messages: ${totalMessages}`)
+        console.log(`\nRun: purmemo-migrate import <file> --platform claude`)
+      } else {
+        const totalMessages = conversations.reduce(
+          (s, c) => s + (c['mapping'] ? Object.keys(c['mapping'] as object).length : 0),
+          0
+        )
+        console.log(`\n📦 Raw export (detected: chatgpt)`)
+        console.log(`   Conversations: ${conversations.length}`)
+        console.log(`   Total nodes:   ${totalMessages} (includes branches)`)
+        console.log(`\nRun: purmemo-migrate import <file> --platform chatgpt`)
+      }
     }
   })
 

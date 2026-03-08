@@ -12,22 +12,22 @@ At session start, always call:
 Key memories to recall:
 - "purmemo-amp ADR-001 through ADR-004" — all pre-build decisions
 - "Purmemo Playbook 2.0 Complete Strategy" — 5-track strategy, 20 Q&A
-- "DECISION: Own the Spec Not MIF" — MIF alignment is reversed, we own the spec
+
 
 ## Repo Structure
 
 ```
-packages/schema/     @purmemo/schema     — Zod schema + TypeScript types (AMP v0.1)
-packages/converters/ @purmemo/converters — Platform parsers (ChatGPT DAG, more coming)
-packages/migrate/    @purmemo/migrate    — Commander.js CLI
-packages/mcp/        @purmemo/mcp        — Reference MCP server
+packages/schema/     @purmemo.ai/schema     — Zod schema + TypeScript types (AMP v0.1)
+packages/converters/ @purmemo.ai/converters — Platform parsers (ChatGPT DAG, more coming)
+packages/migrate/    @purmemo.ai/migrate    — Commander.js CLI
+packages/mcp/        @purmemo.ai/mcp        — Reference MCP server
 spec/AMP-v0.1.md                        — Human-readable spec
 ```
 
 ## Key Decisions (from pūrmemo MCP memory)
 
 - **AMP = AI Memory Protocol** (not Portability). Tagline: "The open protocol for AI conversation portability."
-- **pūrmemo owns the spec** — NOT aligned with MIF. Offer MIF converter as community gesture.
+- **pūrmemo owns the spec** — AMP is the standard for AI conversation portability.
 - **pnpm workspaces** + changesets for monorepo
 - **Zod v4** for schema validation, **Commander.js** for CLI
 - **Apache-2.0** license

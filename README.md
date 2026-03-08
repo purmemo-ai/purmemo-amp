@@ -150,7 +150,7 @@ AMP is open-source and open-standard. Contributions welcome:
 - **Platform converters** — Perplexity, Mistral, Copilot, and others
 - **Level 3 spec** — `content_parts[]` for rich content (images, code, citations)
 - **Validators** — JSON Schema, Python, Go implementations
-- **MIF bridge** — converter between AMP and MIF formats
+
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 

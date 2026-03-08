@@ -23,10 +23,7 @@ See `packages/converters/src/chatgpt.ts` as the reference implementation.
 ### 2. Level 3 Spec Design
 `spec/AMP-v0.1.md` defers `content_parts[]` (images, code blocks, citations, tool calls) to v0.2. Open an issue with a proposal if you have opinions on the schema.
 
-### 3. MIF Bridge
-Bidirectional converter between AMP and [MIF (Memory Interchange Format)](https://github.com/zircote/MIF). Interoperable without dependent.
-
-### 4. Validators in Other Languages
+### 3. Validators in Other Languages
 Python, Go, and Rust validators that check AMP compliance.
 
 ---

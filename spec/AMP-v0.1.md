@@ -194,9 +194,6 @@ Converters MUST set `amp_version` to the version of the spec they implement.
 ### MCP (Model Context Protocol)
 MCP defines transport (JSON-RPC 2.0) for Resources, Prompts, and Tools. It has no concept of conversation schema or portability. AMP is complementary: AMP defines what conversation data looks like; MCP defines how to serve it to AI tools. The `@purmemo/mcp` package provides a reference MCP server that serves AMP data.
 
-### MIF (Memory Interchange Format)
-MIF (github.com/zircote/MIF) is a format for developer tool memory migration (Obsidian-native, semantic/episodic/procedural types). AMP solves a different problem: consumer-scale cross-platform conversation portability. A MIF ↔ AMP converter is planned.
-
 ### IMAP / MBOX
 AMP aspires to be for AI conversations what IMAP/MBOX is for email: an open, vendor-neutral format that enables portability and interoperability at scale.
 

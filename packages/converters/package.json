@@ -1,6 +1,6 @@
 {
   "name": "@purmemo.ai/converters",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Platform converters for AMP — parse ChatGPT, Claude, Gemini, and Cursor exports into AMP format",
   "type": "module",
   "main": "./dist/index.js",

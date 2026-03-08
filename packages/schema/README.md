@@ -63,6 +63,11 @@ AMP (AI Memory Protocol) is an open format for AI conversation portability. A va
 | L1 | `id`, `role`, `content`, `platform` |
 | L2 | + `timestamp`, `model`, `parent_id`, `metadata` |
 
+## Community
+
+- [Discord](https://discord.gg/QWgm9qw4b2) — get help, share feedback, discuss the spec
+- [GitHub Issues](https://github.com/purmemo-ai/purmemo-amp/issues) — bug reports and feature requests
+
 ## Links
 
 - [AMP Spec](https://github.com/purmemo-ai/purmemo-amp/blob/main/spec/AMP-v0.1.md)

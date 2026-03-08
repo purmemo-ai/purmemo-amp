@@ -131,6 +131,18 @@ if (result.success) console.log('Valid AMP export')
 
 ---
 
+## Community
+
+Join the pūrmemo Discord to get help, discuss the AMP spec, share your conversions, and connect with other developers:
+
+**[discord.gg/QWgm9qw4b2](https://discord.gg/QWgm9qw4b2)**
+
+- `#build-in-public` — follow development, contribute to the spec
+- `#feedback` — bug reports and feature requests
+- `#general` — questions and conversation
+
+---
+
 ## Contributing
 
 AMP is open-source and open-standard. Contributions welcome:

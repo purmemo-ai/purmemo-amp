@@ -30,6 +30,11 @@ npm install @purmemo.ai/mcp
 
 See [CONTRIBUTING.md](https://github.com/purmemo-ai/purmemo-amp/blob/main/CONTRIBUTING.md) for how to add converters and server features.
 
+## Community
+
+- [Discord](https://discord.gg/QWgm9qw4b2) — get help, share feedback, contribute to the MCP server
+- [GitHub Issues](https://github.com/purmemo-ai/purmemo-amp/issues) — bug reports and feature requests
+
 ## Links
 
 - [AMP Spec](https://github.com/purmemo-ai/purmemo-amp/blob/main/spec/AMP-v0.1.md)

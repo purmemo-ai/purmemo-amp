@@ -70,6 +70,11 @@ purmemo-migrate info export.amp.json
 3. Download and unzip
 4. Run: `npx @purmemo.ai/migrate import conversations.json`
 
+## Community
+
+- [Discord](https://discord.gg/QWgm9qw4b2) — get help, share feedback, discuss converters
+- [GitHub Issues](https://github.com/purmemo-ai/purmemo-amp/issues) — bug reports and feature requests
+
 ## Links
 
 - [AMP Spec](https://github.com/purmemo-ai/purmemo-amp/blob/main/spec/AMP-v0.1.md)

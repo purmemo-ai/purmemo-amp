@@ -11,12 +11,12 @@ The highest-impact contribution. Each converter lives in `packages/converters/sr
 export function convert<Platform>Export(raw: unknown): AMPExport
 ```
 
-Platforms shipped: ChatGPT ✅, Claude ✅, Gemini ✅, Cursor ✅
+Platforms shipped: ChatGPT ✅, Claude ✅, Gemini ✅, Cursor ✅, Perplexity ✅, Grok ✅, Mistral ✅, GitHub Copilot ✅
 
 Platforms needed (priority order):
-- **Perplexity** — JSON export via Settings → Data Controls
-- **GitHub Copilot** — local chat history
-- **Mistral Le Chat** — export format TBD
+- **Poe** — GDPR email request to privacy@poe.com
+- **Amazon Q** — CLI: `~/.aws/amazonq/history/`
+- **Character.ai** — Profile → Settings → Account → Export
 
 See `packages/converters/src/chatgpt.ts` as the reference implementation.
 

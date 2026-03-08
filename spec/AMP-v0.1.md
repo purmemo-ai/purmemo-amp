@@ -154,8 +154,11 @@ Level 3 will add:
 | ChatGPT | `chatgpt-export-v1` | Settings → Data Controls → Export Data → `conversations.json` |
 | Claude | `claude-export-v1` | Settings → Export Data → `conversations.json` |
 | Gemini | `gemini-takeout-v1` | Google Takeout → My Activity → Gemini Apps Activity |
-| Cursor | `cursor-sqlite-v1` | Local `~/.cursor/User/workspaceStorage/*/state.vscdb` |
-| Perplexity | `perplexity-export-v1` | Settings → Data Controls → Export |
+| Cursor | `cursor-sqlite-v1` | Local `state.vscdb` (auto-extracted, no export needed) |
+| Perplexity | `perplexity-export-v1` | Settings → Data Controls → Download My Data |
+| Grok | `grok-export-v1` | accounts.x.ai → Download account data → `prod-grok-backend.json` |
+| Mistral Le Chat | `mistral-export-v1` | Settings → Export |
+| GitHub Copilot Chat | `github-copilot-export-v1` | VS Code: Command Palette → "Chat: Export Chat..." |
 
 ---
 
@@ -174,6 +177,14 @@ Level 3 will add:
 ### Cursor
 - Older Cursor versions lack timestamps entirely — `timestamp: null` is expected.
 - Cursor stores chats in local SQLite (`state.vscdb`) — this is the user's data on their own machine.
+
+### Grok
+- Export uses BSON-style timestamps: `{ "$date": { "$numberLong": "1741348800000" } }` — must be normalized to ISO 8601.
+- Assistant messages include web search citations — preserved in the `sources[]` field.
+
+### GitHub Copilot Chat
+- Each exported file is a single session. Converters accept either a single session object or an array.
+- VS Code exports via Command Palette → "Chat: Export Chat..." (JSON format).
 
 ---
 

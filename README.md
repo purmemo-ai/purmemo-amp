@@ -8,7 +8,7 @@
 
 ---
 
-There is no IMAP for AI conversations. ChatGPT's export is a nested DAG. Claude's is a flat JSON with tool call noise. Gemini's lives in Google Takeout. Cursor's is buried in a local SQLite database. None of them talk to each other.
+There is no IMAP for AI conversations. ChatGPT's export is a nested DAG. Claude's is a flat JSON with tool call noise. Gemini's lives in Google Takeout. Cursor's is buried in a local SQLite database. Perplexity exports Q&A pairs with citations. Grok uses BSON timestamps. None of them talk to each other.
 
 **AMP is the missing standard.**
 
@@ -60,10 +60,13 @@ npx @purmemo.ai/migrate cursor-extract
 | Platform | Status | How to export |
 |----------|--------|---------------|
 | ChatGPT | ✅ v0.1.0 | Settings → Data Controls → Export Data |
-| Claude | ✅ v0.1.1 | Settings → Export Data |
-| Gemini | ✅ v0.1.2 (converter ready) | Awaiting Google Takeout chat export support |
-| Cursor | ✅ v0.1.3 | Auto-extracted from local SQLite DB |
-| Perplexity | 🚧 Coming soon | — |
+| Claude | ✅ v0.1.0 | Settings → Export Data |
+| Gemini | ✅ v0.1.0 (converter ready) | Awaiting Google Takeout chat export |
+| Cursor | ✅ v0.1.0 | Auto-extracted from local SQLite DB |
+| Perplexity | ✅ v0.2.0 | Settings → Data Controls → Download My Data |
+| Grok | ✅ v0.2.0 | accounts.x.ai → Download account data |
+| Mistral Le Chat | ✅ v0.2.0 | Settings → Export |
+| GitHub Copilot | ✅ v0.2.0 | VS Code: Command Palette → "Chat: Export Chat..." |
 
 ---
 
@@ -72,7 +75,7 @@ npx @purmemo.ai/migrate cursor-extract
 | Package | Description | Version |
 |---------|-------------|---------|
 | [`@purmemo.ai/schema`](packages/schema) | Zod schema + TypeScript types for AMP v0.1 | [![npm](https://img.shields.io/npm/v/@purmemo.ai/schema)](https://www.npmjs.com/package/@purmemo.ai/schema) |
-| [`@purmemo.ai/converters`](packages/converters) | Platform parsers: ChatGPT, Claude, Gemini, Cursor | [![npm](https://img.shields.io/npm/v/@purmemo.ai/converters)](https://www.npmjs.com/package/@purmemo.ai/converters) |
+| [`@purmemo.ai/converters`](packages/converters) | Platform parsers: ChatGPT, Claude, Gemini, Cursor, Perplexity, Grok, Mistral, GitHub Copilot | [![npm](https://img.shields.io/npm/v/@purmemo.ai/converters)](https://www.npmjs.com/package/@purmemo.ai/converters) |
 | [`@purmemo.ai/migrate`](packages/migrate) | CLI: `npx @purmemo.ai/migrate import <file>` | [![npm](https://img.shields.io/npm/v/@purmemo.ai/migrate)](https://www.npmjs.com/package/@purmemo.ai/migrate) |
 | [`@purmemo.ai/mcp`](packages/mcp) | Reference MCP server for AMP data | [![npm](https://img.shields.io/npm/v/@purmemo.ai/mcp)](https://www.npmjs.com/package/@purmemo.ai/mcp) |
 
@@ -86,10 +89,11 @@ npx @purmemo.ai/migrate cursor-extract
   id: string
   role: "user" | "assistant" | "system" | "tool"
   content: string              // normalized plain text
-  platform: string             // "chatgpt" | "claude" | "gemini" | "cursor" | ...
+  platform: string             // "chatgpt" | "claude" | "gemini" | "cursor" | "perplexity" | "grok" | "mistral" | "github-copilot" | ...
   timestamp?: string | null    // ISO 8601
   model?: string | null        // e.g. "gpt-4o", "claude-3-5-sonnet"
   parent_id?: string | null
+  sources?: AMPSource[] | null // web citations (Perplexity, Grok)
   metadata?: Record<string, unknown>
 }
 ```
@@ -147,7 +151,7 @@ Join the pūrmemo Discord to get help, discuss the AMP spec, share your conversi
 
 AMP is open-source and open-standard. Contributions welcome:
 
-- **Platform converters** — Perplexity, Mistral, Copilot, and others
+- **Platform converters** — Poe, Amazon Q, Character.ai, and others
 - **Level 3 spec** — `content_parts[]` for rich content (images, code, citations)
 - **Validators** — JSON Schema, Python, Go implementations
 

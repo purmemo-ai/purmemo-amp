@@ -2,8 +2,11 @@
 import { Command } from 'commander'
 import { readFileSync, writeFileSync } from 'fs'
 import { resolve, basename, extname } from 'path'
-import { convertChatGPTExport, convertClaudeExport, convertGeminiExport, convertCursorExport } from '@purmemo.ai/converters'
+import { convertChatGPTExport, convertClaudeExport, convertGeminiExport, convertCursorExport, convertCursorDBRows } from '@purmemo.ai/converters'
 import { parseAMPExport } from '@purmemo.ai/schema'
+import { existsSync } from 'fs'
+import { homedir } from 'os'
+import { join } from 'path'
 
 const program = new Command()
 
@@ -230,6 +233,90 @@ program
         console.log(`   Total nodes:   ${totalMessages} (includes branches)`)
         console.log(`\nRun: purmemo-migrate import <file> --platform chatgpt`)
       }
+    }
+  })
+
+// ── cursor-extract ───────────────────────────────────────────
+program
+  .command('cursor-extract')
+  .description('Extract Cursor chat history directly from the local SQLite database')
+  .option('-o, --output <path>', 'Output file path (default: cursor.amp.json)')
+  .option('--db <path>', 'Path to state.vscdb (auto-detected if omitted)')
+  .option('--markdown', 'Also write a human-readable Markdown file', false)
+  .option('--stats', 'Print summary statistics', false)
+  .option('--dry-run', 'Parse and validate without writing output', false)
+  .action(async (opts: { output?: string; db?: string; markdown: boolean; stats: boolean; dryRun: boolean }) => {
+    // Auto-detect DB path
+    const candidates = [
+      opts.db,
+      join(homedir(), 'Library', 'Application Support', 'Cursor', 'User', 'globalStorage', 'state.vscdb'),
+      join(homedir(), '.config', 'Cursor', 'User', 'globalStorage', 'state.vscdb'),
+      join(process.env['APPDATA'] ?? '', 'Cursor', 'User', 'globalStorage', 'state.vscdb'),
+    ].filter(Boolean) as string[]
+
+    const dbPath = candidates.find((p) => existsSync(p))
+    if (!dbPath) {
+      console.error('Could not find Cursor database. Install Cursor or specify --db <path>')
+      process.exit(1)
+    }
+
+    console.log(`📂 Reading Cursor database: ${dbPath}`)
+
+    // Dynamically require sqlite3 (optional peer dep)
+    let Database: new (path: string, cb: (err: Error | null) => void) => {
+      all: (sql: string, cb: (err: Error | null, rows: {key: string; value: string}[]) => void) => void
+      close: () => void
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('better-sqlite3') as { default: typeof Database }
+      Database = mod.default ?? mod as unknown as typeof Database
+    } catch {
+      console.error('Missing dependency: better-sqlite3')
+      console.error('Install it: npm install -g better-sqlite3')
+      process.exit(1)
+    }
+
+    let rows: { key: string; value: string }[]
+    try {
+      const db = new Database(dbPath, () => {})
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rows = (db as any).prepare('SELECT key, value FROM cursorDiskKV').all() as { key: string; value: string }[]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(db as any).close()
+    } catch (err) {
+      console.error('Failed to read database:', err instanceof Error ? err.message : err)
+      process.exit(1)
+    }
+
+    const result = convertCursorDBRows(rows)
+    const validation = parseAMPExport(result)
+    if (!validation.success) {
+      console.error('AMP validation failed:', validation.error.format())
+      process.exit(1)
+    }
+
+    if (opts.stats || opts.dryRun) {
+      const totalMessages = result.conversations.reduce((s: number, c: { messages: unknown[] }) => s + c.messages.length, 0)
+      console.log(`\n📊 Cursor extraction summary:`)
+      console.log(`   Conversations: ${result.conversation_count}`)
+      console.log(`   Messages:      ${totalMessages}`)
+      console.log(`   AMP version:   ${result.amp_version}`)
+    }
+
+    if (opts.dryRun) {
+      console.log('\n✅ Dry run complete — no files written.')
+      return
+    }
+
+    const outJson = opts.output ?? resolve(process.cwd(), 'cursor.amp.json')
+    writeFileSync(outJson, JSON.stringify(result, null, 2), 'utf-8')
+    console.log(`\n✅ AMP export written to: ${outJson}`)
+
+    if (opts.markdown) {
+      const outMd = outJson.replace(/\.amp\.json$/, '.amp.md')
+      writeFileSync(outMd, toMarkdown(result), 'utf-8')
+      console.log(`📝 Markdown written to:   ${outMd}`)
     }
   })
 

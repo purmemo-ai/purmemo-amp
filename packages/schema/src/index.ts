@@ -17,6 +17,9 @@ export const AMPPlatform = z.enum([
   'gemini',
   'cursor',
   'perplexity',
+  'grok',
+  'mistral',
+  'github-copilot',
   'other',
 ])
 export type AMPPlatform = z.infer<typeof AMPPlatform>
@@ -26,6 +29,19 @@ export type AMPPlatform = z.infer<typeof AMPPlatform>
  */
 export const AMPRole = z.enum(['user', 'assistant', 'system', 'tool'])
 export type AMPRole = z.infer<typeof AMPRole>
+
+/**
+ * AMP Source — a cited reference attached to a message.
+ * Used by platforms that surface web citations (Perplexity, Grok, etc.)
+ *
+ * Level 2 field — optional, preserved from platform export.
+ */
+export const AMPSource = z.object({
+  url: z.string().nullable().optional(),
+  title: z.string().nullable().optional(),
+  snippet: z.string().nullable().optional(),
+})
+export type AMPSource = z.infer<typeof AMPSource>
 
 // ============================================================
 // LEVEL 1 — Core (all conformant implementations must support)
@@ -50,6 +66,7 @@ export const AMPMessage = z.object({
   timestamp: z.string().datetime({ offset: true }).nullable().optional(),
   model: z.string().nullable().optional(),
   parent_id: z.string().nullable().optional(),
+  sources: z.array(AMPSource).nullable().optional(),  // citations from search-augmented platforms
   metadata: z.record(z.unknown()).optional(),
 })
 export type AMPMessage = z.infer<typeof AMPMessage>

@@ -1,7 +1,7 @@
 {
   "name": "@purmemo.ai/converters",
-  "version": "0.1.2",
-  "description": "Platform converters for AMP — parse ChatGPT, Claude, Gemini, and Cursor exports into AMP format",
+  "version": "0.2.0",
+  "description": "Platform converters for AMP — parse ChatGPT, Claude, Gemini, Cursor, Perplexity, Grok, Mistral, and GitHub Copilot exports into AMP format",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -32,7 +32,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["amp", "ai-memory-protocol", "chatgpt", "converter", "portability", "purmemo"],
+  "keywords": ["amp", "ai-memory-protocol", "chatgpt", "claude", "gemini", "cursor", "perplexity", "grok", "mistral", "github-copilot", "converter", "portability", "purmemo"],
   "license": "Apache-2.0",
   "homepage": "https://github.com/purmemo-ai/purmemo-amp",
   "repository": {

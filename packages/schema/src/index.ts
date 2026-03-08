@@ -3,7 +3,7 @@ import { z } from 'zod'
 // ============================================================
 // AMP — AI Memory Protocol v0.1
 // The open protocol for AI conversation portability.
-// https://github.com/purmemo/purmemo-amp
+// https://github.com/purmemo-ai/purmemo-amp
 // Apache-2.0
 // ============================================================
 

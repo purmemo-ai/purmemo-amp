@@ -3,9 +3,9 @@
 
 **Status:** Draft
 **Date:** March 2026
-**Authors:** pūrmemo (https://purmemo.com)
+**Authors:** pūrmemo (https://purmemo.ai)
 **License:** Apache-2.0
-**Repository:** https://github.com/purmemo/purmemo-amp
+**Repository:** https://github.com/purmemo-ai/purmemo-amp
 
 ---
 
@@ -152,7 +152,7 @@ Level 3 will add:
 | Platform | Source Format Identifier | Export Method |
 |----------|--------------------------|---------------|
 | ChatGPT | `chatgpt-export-v1` | Settings → Data Controls → Export Data → `conversations.json` |
-| Claude | `claude-api-v1` | API response format (no bulk consumer export yet) |
+| Claude | `claude-export-v1` | Settings → Export Data → `conversations.json` |
 | Gemini | `gemini-takeout-v1` | Google Takeout → My Activity → Gemini Apps Activity |
 | Cursor | `cursor-sqlite-v1` | Local `~/.cursor/User/workspaceStorage/*/state.vscdb` |
 | Perplexity | `perplexity-export-v1` | Settings → Data Controls → Export |
@@ -206,7 +206,7 @@ AMP aspires to be for AI conversations what IMAP/MBOX is for email: an open, ven
 
 AMP is an open specification. Contributions welcome:
 
-- **Converters** for new platforms (Claude bulk export, Gemini, Cursor, Perplexity)
+- **Converters** for new platforms (Perplexity, Mistral, GitHub Copilot, and others)
 - **Level 3 spec design** — `content_parts[]` schema for rich content
 - **Tooling** — validators, importers, MCP server implementations
 - **Translations** — spec in other languages

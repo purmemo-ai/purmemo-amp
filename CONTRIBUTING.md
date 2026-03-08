@@ -11,11 +11,12 @@ The highest-impact contribution. Each converter lives in `packages/converters/sr
 export function convert<Platform>Export(raw: unknown): AMPExport
 ```
 
+Platforms shipped: ChatGPT ✅, Claude ✅, Gemini ✅, Cursor ✅
+
 Platforms needed (priority order):
-- **Claude** — API format (typed content blocks) + browser export
-- **Gemini** — Google Takeout `My Activity → Gemini Apps Activity` HTML/JSON
-- **Cursor** — local SQLite `~/.cursor/User/workspaceStorage/*/state.vscdb`
 - **Perplexity** — JSON export via Settings → Data Controls
+- **GitHub Copilot** — local chat history
+- **Mistral Le Chat** — export format TBD
 
 See `packages/converters/src/chatgpt.ts` as the reference implementation.
 
@@ -37,7 +38,7 @@ Python, Go, and Rust validators that check AMP compliance.
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 # Clone and install
-git clone https://github.com/purmemo/purmemo-amp
+git clone https://github.com/purmemo-ai/purmemo-amp
 cd purmemo-amp
 pnpm install
 pnpm build
@@ -49,8 +50,8 @@ node packages/migrate/dist/cli.js import ~/Downloads/conversations.json --platfo
 ## Development
 
 ```bash
-pnpm --filter @purmemo/converters build   # build one package
-pnpm --filter @purmemo/converters dev     # watch mode
+pnpm --filter @purmemo.ai/converters build   # build one package
+pnpm --filter @purmemo.ai/converters dev     # watch mode
 pnpm build                                # build all
 pnpm test                                 # test all
 ```

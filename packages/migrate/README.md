@@ -63,6 +63,21 @@ purmemo-migrate info conversations.json
 purmemo-migrate info export.amp.json
 ```
 
+## Platform Support
+
+<!-- PLATFORMS:cli -->
+| Platform | How to export | CLI command |
+|----------|---------------|-------------|
+| ChatGPT | Settings → Data Controls → Export Data | `npx @purmemo.ai/migrate import conversations.json` |
+| Claude | Settings → Export Data | `npx @purmemo.ai/migrate import conversations.json` |
+| Gemini | Google Takeout (converter ready — awaiting Google chat export support) | `npx @purmemo.ai/migrate import <file>` |
+| Cursor | Auto-extracted from local SQLite DB | `npx @purmemo.ai/migrate cursor-extract` |
+| Perplexity | Settings → Data Controls → Download My Data | `npx @purmemo.ai/migrate import conversations JSON in ZIP` |
+| Grok | accounts.x.ai → Download account data | `npx @purmemo.ai/migrate import prod-grok-backend.json` |
+| Mistral Le Chat | Settings → Export | `npx @purmemo.ai/migrate import <file>` |
+| GitHub Copilot Chat | VS Code: Command Palette → "Chat: Export Chat..." | `npx @purmemo.ai/migrate import <file>` |
+<!-- /PLATFORMS -->
+
 ## How to Export from ChatGPT
 
 1. Go to **Settings → Data Controls → Export Data**

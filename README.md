@@ -57,16 +57,21 @@ npx @purmemo.ai/migrate cursor-extract
 
 ## Platform Support
 
-| Platform | Status | How to export |
-|----------|--------|---------------|
-| ChatGPT | ✅ v0.1.0 | Settings → Data Controls → Export Data |
-| Claude | ✅ v0.1.0 | Settings → Export Data |
-| Gemini | ✅ v0.1.0 (converter ready) | Awaiting Google Takeout chat export |
-| Cursor | ✅ v0.1.0 | Auto-extracted from local SQLite DB |
-| Perplexity | ✅ v0.2.0 | Settings → Data Controls → Download My Data |
-| Grok | ✅ v0.2.0 | accounts.x.ai → Download account data |
-| Mistral Le Chat | ✅ v0.2.0 | Settings → Export |
-| GitHub Copilot | ✅ v0.2.0 | VS Code: Command Palette → "Chat: Export Chat..." |
+<!-- PLATFORMS:support -->
+| Platform | Status | Since | How to export |
+|----------|--------|-------|---------------|
+| ChatGPT | ✅ v0.1.0 | v0.1.0 | Settings → Data Controls → Export Data |
+| Claude | ✅ v0.1.0 | v0.1.0 | Settings → Export Data |
+| Gemini | ✅ v0.1.0 | v0.1.0 | Google Takeout (converter ready — awaiting Google chat export support) |
+| Cursor | ✅ v0.1.0 | v0.1.0 | Auto-extracted from local SQLite DB |
+| Perplexity | ✅ v0.2.0 | v0.2.0 | Settings → Data Controls → Download My Data |
+| Grok | ✅ v0.2.0 | v0.2.0 | accounts.x.ai → Download account data |
+| Mistral Le Chat | ✅ v0.2.0 | v0.2.0 | Settings → Export |
+| GitHub Copilot Chat | ✅ v0.2.0 | v0.2.0 | VS Code: Command Palette → "Chat: Export Chat..." |
+| Poe | 🔜  | — | GDPR email request to privacy@poe.com |
+| Amazon Q | 🔜  | — | CLI: ~/.aws/amazonq/history/ |
+| Character.ai | 🔜  | — | Profile → Settings → Account → Export |
+<!-- /PLATFORMS -->
 
 ---
 

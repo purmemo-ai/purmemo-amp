@@ -54,7 +54,9 @@ AMP (AI Memory Protocol) is an open format for AI conversation portability. A va
 
 ## Supported Platforms
 
-`chatgpt` | `claude` | `gemini` | `cursor` | `perplexity` | `other`
+<!-- PLATFORMS:schema -->
+`chatgpt` | `claude` | `gemini` | `cursor` | `perplexity` | `grok` | `mistral` | `github-copilot`
+<!-- /PLATFORMS -->
 
 ## Conformance Levels
 

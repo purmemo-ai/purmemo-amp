@@ -10,16 +10,21 @@ npm install @purmemo.ai/converters
 
 ## Platform Support
 
+<!-- PLATFORMS:converters -->
 | Platform | Converter | Export Path |
 |----------|-----------|-------------|
-| ChatGPT | `convertChatGPTExport` | Settings → Data Controls → Export Data → `conversations.json` |
-| Claude | `convertClaudeExport` | Settings → Export Data → `conversations.json` |
-| Gemini | `convertGeminiExport` | Google Takeout (converter ready; awaiting Google chat export support) |
-| Cursor | `convertCursorDBRows` | Auto-extracted from `state.vscdb` via `@purmemo.ai/migrate` |
+| ChatGPT | `convertChatGPTExport` | Settings → Data Controls → Export Data |
+| Claude | `convertClaudeExport` | Settings → Export Data |
+| Gemini | `convertGeminiExport` | Google Takeout (converter ready — awaiting Google chat export support) |
+| Cursor | `convertCursorDBRows` | Auto-extracted from local SQLite DB |
 | Perplexity | `convertPerplexityExport` | Settings → Data Controls → Download My Data |
-| Grok | `convertGrokExport` | accounts.x.ai → Download account data → `prod-grok-backend.json` |
+| Grok | `convertGrokExport` | accounts.x.ai → Download account data |
 | Mistral Le Chat | `convertMistralExport` | Settings → Export |
-| GitHub Copilot | `convertGitHubCopilotExport` | VS Code: Command Palette → "Chat: Export Chat..." |
+| GitHub Copilot Chat | `convertGitHubCopilotExport` | VS Code: Command Palette → "Chat: Export Chat..." |
+| Poe | 🔜 coming | GDPR email request to privacy@poe.com |
+| Amazon Q | 🔜 coming | CLI: ~/.aws/amazonq/history/ |
+| Character.ai | 🔜 coming | Profile → Settings → Account → Export |
+<!-- /PLATFORMS -->
 
 ## Usage
 

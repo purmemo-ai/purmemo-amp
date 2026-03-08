@@ -1,0 +1,112 @@
+[
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "status": "✅",
+    "since": "v0.1.0",
+    "converter": "convertChatGPTExport",
+    "export_path": "Settings → Data Controls → Export Data",
+    "export_file": "conversations.json",
+    "notes": "Full DAG parsing, multimodal, code interpreter, tool calls"
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "status": "✅",
+    "since": "v0.1.0",
+    "converter": "convertClaudeExport",
+    "export_path": "Settings → Export Data",
+    "export_file": "conversations.json",
+    "notes": "Flat format, attachments, content parts, thinking blocks"
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini",
+    "status": "✅",
+    "since": "v0.1.0",
+    "converter": "convertGeminiExport",
+    "export_path": "Google Takeout (converter ready — awaiting Google chat export support)",
+    "export_file": null,
+    "notes": "Google Takeout does not yet include Gemini chat history"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "status": "✅",
+    "since": "v0.1.0",
+    "converter": "convertCursorDBRows",
+    "export_path": "Auto-extracted from local SQLite DB",
+    "export_file": "state.vscdb",
+    "notes": "No manual export needed — use purmemo-migrate cursor-extract"
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "status": "✅",
+    "since": "v0.2.0",
+    "converter": "convertPerplexityExport",
+    "export_path": "Settings → Data Controls → Download My Data",
+    "export_file": "conversations JSON in ZIP",
+    "notes": "Includes citations as sources[]"
+  },
+  {
+    "id": "grok",
+    "name": "Grok",
+    "status": "✅",
+    "since": "v0.2.0",
+    "converter": "convertGrokExport",
+    "export_path": "accounts.x.ai → Download account data",
+    "export_file": "prod-grok-backend.json",
+    "notes": "BSON timestamp handling, human/grok role mapping"
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral Le Chat",
+    "status": "✅",
+    "since": "v0.2.0",
+    "converter": "convertMistralExport",
+    "export_path": "Settings → Export",
+    "export_file": null,
+    "notes": "OpenAI-compatible schema"
+  },
+  {
+    "id": "github-copilot",
+    "name": "GitHub Copilot Chat",
+    "status": "✅",
+    "since": "v0.2.0",
+    "converter": "convertGitHubCopilotExport",
+    "export_path": "VS Code: Command Palette → \"Chat: Export Chat...\"",
+    "export_file": null,
+    "notes": "requests[] structural expansion, tool invocations skipped"
+  },
+  {
+    "id": "poe",
+    "name": "Poe",
+    "status": "🔜",
+    "since": null,
+    "converter": null,
+    "export_path": "GDPR email request to privacy@poe.com",
+    "export_file": null,
+    "notes": "Multi-model wrapper — preserves which model was used"
+  },
+  {
+    "id": "amazon-q",
+    "name": "Amazon Q",
+    "status": "🔜",
+    "since": null,
+    "converter": null,
+    "export_path": "CLI: ~/.aws/amazonq/history/",
+    "export_file": "chat-history-*.json",
+    "notes": "Local JSON files, schema being confirmed"
+  },
+  {
+    "id": "character-ai",
+    "name": "Character.ai",
+    "status": "🔜",
+    "since": null,
+    "converter": null,
+    "export_path": "Profile → Settings → Account → Export",
+    "export_file": null,
+    "notes": "is_human bool role, character persona metadata"
+  }
+]

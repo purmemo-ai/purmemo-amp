@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 
 // ============================================================
@@ -13,6 +13,7 @@ interface ClaudeContentPart {
   type: 'text' | 'tool_use' | 'tool_result' | 'thinking' | 'voice_note' | 'token_budget' | string
   text?: string
   // tool_use fields
+  id?: string
   name?: string
   input?: unknown
   message?: string
@@ -53,8 +54,8 @@ interface ClaudeConversation {
 // --- Helpers ---
 
 /**
- * Extract readable text from Claude content parts array.
- * Skips tool_use/tool_result internals — keeps text and thinking.
+ * Extract readable plain text from Claude content parts array.
+ * Used for the required top-level content field (backward compat).
  */
 function extractContent(parts: ClaudeContentPart[], fallbackText: string): string {
   if (!parts || parts.length === 0) return fallbackText.trim()
@@ -69,13 +70,13 @@ function extractContent(parts: ClaudeContentPart[], fallbackText: string): strin
         }
         break
       case 'thinking':
-        // Skip internal chain-of-thought
+        // Skip internal chain-of-thought from plain text
         break
       case 'tool_use':
-        // Skip tool invocations — they're internal plumbing
+        // Skip tool invocations from plain text
         break
       case 'tool_result':
-        // Skip tool results
+        // Skip tool results from plain text
         break
       case 'token_budget':
         // Internal metadata — skip
@@ -96,6 +97,70 @@ function extractContent(parts: ClaudeContentPart[], fallbackText: string): strin
   if (chunks.length === 0) return fallbackText.trim()
 
   return chunks.join('\n\n')
+}
+
+/**
+ * Build AMPContentPart[] from Claude content parts (Level 3).
+ * Returns undefined when no meaningful rich parts exist.
+ */
+function extractContentParts(parts: ClaudeContentPart[]): AMPContentPart[] | undefined {
+  if (!parts || parts.length === 0) return undefined
+
+  const result: AMPContentPart[] = []
+
+  for (const part of parts) {
+    switch (part.type) {
+      case 'text':
+        if (typeof part.text === 'string' && part.text.trim()) {
+          result.push({ type: 'text', text: part.text.trim() })
+        }
+        break
+      case 'thinking':
+        if (typeof part.text === 'string' && part.text.trim()) {
+          result.push({ type: 'thinking', thinking: part.text.trim() })
+        }
+        break
+      case 'tool_use': {
+        const toolInput = typeof part.input === 'object' && part.input !== null
+          ? (part.input as Record<string, unknown>)
+          : undefined
+        result.push({
+          type: 'tool_use',
+          tool_use_id: typeof part.id === 'string' ? part.id : null,
+          tool_name: typeof part.name === 'string' ? part.name : 'unknown',
+          tool_input: toolInput,
+        })
+        break
+      }
+      case 'tool_result': {
+        const content = typeof part.content === 'string'
+          ? part.content
+          : typeof part.message === 'string'
+          ? part.message
+          : ''
+        if (content) {
+          result.push({
+            type: 'tool_result',
+            tool_use_id: typeof part.tool_use_id === 'string' ? part.tool_use_id : null,
+            content,
+          })
+        }
+        break
+      }
+      case 'voice_note':
+        if (typeof part.text === 'string' && part.text.trim()) {
+          result.push({ type: 'text', text: part.text.trim() })
+        }
+        break
+      // token_budget and unknown types: skip
+    }
+  }
+
+  // Only return if there's actual rich content beyond simple text
+  const hasRichContent = result.some(
+    (p) => p.type === 'tool_use' || p.type === 'tool_result' || p.type === 'thinking'
+  )
+  return hasRichContent ? result : undefined
 }
 
 /**
@@ -131,7 +196,7 @@ export function convertClaudeConversation(raw: ClaudeConversation): AMPConversat
       ? `${content}\n\n${attachmentText}`
       : content
 
-    messages.push({
+    const ampMsg: AMPMessage = {
       id: msg.uuid,
       role: normalizeRole(msg.sender),
       content: finalContent,
@@ -143,7 +208,12 @@ export function convertClaudeConversation(raw: ClaudeConversation): AMPConversat
         has_attachments: msg.attachments.length > 0,
         has_files: msg.files.length > 0,
       },
-    })
+    }
+
+    const content_parts = extractContentParts(msg.content)
+    if (content_parts) ampMsg.content_parts = content_parts
+
+    messages.push(ampMsg)
   }
 
   return {
@@ -155,6 +225,7 @@ export function convertClaudeConversation(raw: ClaudeConversation): AMPConversat
     updated_at: raw.updated_at ?? null,
     source_format: 'claude-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

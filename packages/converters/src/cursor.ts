@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 
 // ============================================================
@@ -125,6 +125,7 @@ export function convertCursorDBRows(rows: CursorDBRow[]): AMPExport {
         metadata: {
           serverBubbleId: header.serverBubbleId ?? null,
         },
+        content_parts: [{ type: 'text', text }] as AMPContentPart[],
       })
     }
 
@@ -139,6 +140,7 @@ export function convertCursorDBRows(rows: CursorDBRow[]): AMPExport {
       updated_at: null,
       source_format: 'cursor-vscdb-v1',
       amp_version: AMP_VERSION,
+      observed_at: new Date().toISOString(),
     })
   }
 
@@ -194,6 +196,7 @@ function convertLegacyCursorConversation(raw: LegacyCursorConversation): AMPConv
       model: msg.model ?? null,
       parent_id: i > 0 ? (raw.messages[i - 1].id ?? `cursor-msg-${i - 1}`) : null,
       metadata: {},
+      content_parts: [{ type: 'text', text: content }] as AMPContentPart[],
     })
   }
   return {
@@ -205,6 +208,7 @@ function convertLegacyCursorConversation(raw: LegacyCursorConversation): AMPConv
     updated_at: msToISO(raw.lastUpdatedAt ?? raw.updatedAt ?? null),
     source_format: 'cursor-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

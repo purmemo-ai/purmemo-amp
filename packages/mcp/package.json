@@ -1,6 +1,6 @@
 {
   "name": "@purmemo.ai/mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Reference MCP server for AMP — expose AI memories via Model Context Protocol",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,10 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup src/server.ts src/index.ts --format esm --dts",
     "test": "vitest run",
@@ -32,7 +35,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["amp", "ai-memory-protocol", "mcp", "model-context-protocol", "memory", "purmemo"],
+  "keywords": [
+    "amp",
+    "ai-memory-protocol",
+    "mcp",
+    "model-context-protocol",
+    "memory",
+    "purmemo"
+  ],
   "license": "Apache-2.0",
   "homepage": "https://github.com/purmemo-ai/purmemo-amp",
   "repository": {

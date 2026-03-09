@@ -40,7 +40,7 @@ describe('convertPerplexityExport', () => {
 
   it('sets amp_version and exported_at', () => {
     const result = convertPerplexityExport([MINIMAL_CONV])
-    expect(result.amp_version).toBe('0.1')
+    expect(result.amp_version).toBe('0.2')
     expect(result.exported_at).toBeTruthy()
   })
 })

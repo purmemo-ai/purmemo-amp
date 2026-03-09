@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 import { normalizeRole, normalizeTimestamp } from './utils.js'
 
@@ -79,6 +79,7 @@ export function convertGrokConversation(
       model: null,  // Grok export doesn't include model per-message
       parent_id: i > 0 ? makeId(convIndex, i - 1) : null,
       metadata: {},
+      content_parts: [{ type: 'text', text: content }] as AMPContentPart[],
     })
   }
 
@@ -91,6 +92,7 @@ export function convertGrokConversation(
     updated_at: null,
     source_format: 'grok-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

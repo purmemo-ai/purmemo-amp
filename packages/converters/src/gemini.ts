@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 
 // ============================================================
@@ -33,8 +33,9 @@ interface GeminiConversation {
 // --- Helpers ---
 
 /**
- * Extract text from Gemini parts array.
+ * Extract plain text from Gemini parts array.
  * Skips inline data (images/audio).
+ * Used for the required top-level content field.
  */
 function extractContent(parts: GeminiPart[]): string {
   if (!parts || parts.length === 0) return ''
@@ -43,6 +44,35 @@ function extractContent(parts: GeminiPart[]): string {
     .filter(Boolean)
     .join('')
     .trim()
+}
+
+/**
+ * Build AMPContentPart[] from Gemini parts (Level 3).
+ * Includes text parts and image inlineData.
+ * Returns undefined when there is nothing richer than plain text.
+ */
+function extractContentParts(parts: GeminiPart[]): AMPContentPart[] | undefined {
+  if (!parts || parts.length === 0) return undefined
+
+  const result: AMPContentPart[] = []
+  let hasImage = false
+
+  for (const p of parts) {
+    if (typeof p.text === 'string' && p.text.trim()) {
+      result.push({ type: 'text', text: p.text.trim() })
+    } else if (p.inlineData) {
+      hasImage = true
+      result.push({
+        type: 'image',
+        data: p.inlineData.data,
+        mime_type: p.inlineData.mimeType,
+      })
+    }
+  }
+
+  // Only return content_parts when there's actual image data
+  // (text-only messages don't gain anything from wrapping in parts)
+  return hasImage ? result : undefined
 }
 
 /**
@@ -79,7 +109,7 @@ export function convertGeminiConversation(
     const content = extractContent(msg.parts)
     if (!content) continue
 
-    messages.push({
+    const ampMsg: AMPMessage = {
       id: makeId(convIndex, i),
       role: normalizeRole(msg.role),
       content,
@@ -88,7 +118,12 @@ export function convertGeminiConversation(
       model: null, // Gemini export doesn't include model per-message
       parent_id: i > 0 ? makeId(convIndex, i - 1) : null,
       metadata: {},
-    })
+    }
+
+    const content_parts = extractContentParts(msg.parts)
+    if (content_parts) ampMsg.content_parts = content_parts
+
+    messages.push(ampMsg)
   }
 
   return {
@@ -100,6 +135,7 @@ export function convertGeminiConversation(
     updated_at: raw.updateTime ?? null,
     source_format: 'gemini-takeout-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

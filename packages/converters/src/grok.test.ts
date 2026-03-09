@@ -32,7 +32,7 @@ describe('convertGrokExport', () => {
 
   it('sets amp_version', () => {
     const result = convertGrokExport([MINIMAL_CONV])
-    expect(result.amp_version).toBe('0.1')
+    expect(result.amp_version).toBe('0.2')
   })
 })
 

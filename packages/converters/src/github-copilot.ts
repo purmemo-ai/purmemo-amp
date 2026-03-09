@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 import { normalizeTimestamp } from './utils.js'
 
@@ -119,6 +119,38 @@ function extractAssistantContent(items?: CopilotResponseItem[]): string {
 }
 
 /**
+ * Build AMPContentPart[] from Copilot response items (Level 3).
+ * Captures text blocks and code blocks separately.
+ */
+function buildCopilotContentParts(items?: CopilotResponseItem[]): AMPContentPart[] {
+  if (!Array.isArray(items)) return []
+  const parts: AMPContentPart[] = []
+
+  for (const item of items) {
+    if (item.kind !== 'text' || typeof item.content !== 'string') continue
+    const raw = item.content.trim()
+    if (!raw) continue
+
+    // Split on fenced code blocks: ```lang\ncode\n```
+    const segments = raw.split(/(```[\w]*\n[\s\S]*?```)/g)
+    for (const seg of segments) {
+      const codeMatch = seg.match(/^```([\w]*)\n([\s\S]*?)```$/)
+      if (codeMatch) {
+        parts.push({
+          type: 'code',
+          language: codeMatch[1] || null,
+          code: codeMatch[2],
+        })
+      } else if (seg.trim()) {
+        parts.push({ type: 'text', text: seg.trim() })
+      }
+    }
+  }
+
+  return parts.length > 0 ? parts : [{ type: 'text', text: '' }]
+}
+
+/**
  * Convert a single Copilot Chat session export to AMPConversation.
  *
  * Each request in session.requests expands to two AMP messages:
@@ -160,10 +192,14 @@ export function convertCopilotConversation(
         model: null,
         parent_id: prevAssistantId,
         metadata: {},
+        content_parts: [{ type: 'text', text: userContent }] as AMPContentPart[],
       })
     }
 
     if (assistantContent) {
+      // Build content_parts: split on code blocks if present
+      const assistantParts = buildCopilotContentParts(req.response)
+
       messages.push({
         id: assistantMsgId,
         role: 'assistant',
@@ -175,6 +211,7 @@ export function convertCopilotConversation(
         metadata: {
           timings: req.result?.timings ?? null,
         },
+        content_parts: assistantParts,
       })
     }
   }
@@ -188,6 +225,7 @@ export function convertCopilotConversation(
     updated_at: null,
     source_format: 'github-copilot-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

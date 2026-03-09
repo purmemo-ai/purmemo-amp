@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 import { normalizeRole, normalizeTimestamp } from './utils.js'
 
@@ -72,6 +72,7 @@ export function convertMistralConversation(
       model: typeof msg.model === 'string' ? msg.model : null,
       parent_id: i > 0 ? (raw.messages[i - 1].id ?? makeId(convIndex, i - 1)) : null,
       metadata: {},
+      content_parts: [{ type: 'text', text: content }] as AMPContentPart[],
     })
   }
 
@@ -84,6 +85,7 @@ export function convertMistralConversation(
     updated_at: normalizeTimestamp(raw.updated_at),
     source_format: 'mistral-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 

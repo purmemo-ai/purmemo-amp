@@ -39,7 +39,7 @@ describe('convertCopilotExport', () => {
 
   it('sets amp_version', () => {
     const result = convertCopilotExport(MINIMAL_SESSION)
-    expect(result.amp_version).toBe('0.1')
+    expect(result.amp_version).toBe('0.2')
   })
 })
 

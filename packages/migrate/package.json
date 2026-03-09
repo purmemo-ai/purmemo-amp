@@ -1,6 +1,6 @@
 {
   "name": "@purmemo.ai/migrate",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI tool to migrate AI conversations to AMP format — supports ChatGPT, Claude, Gemini, Cursor, Perplexity, Grok, Mistral, GitHub Copilot",
   "type": "module",
   "bin": {

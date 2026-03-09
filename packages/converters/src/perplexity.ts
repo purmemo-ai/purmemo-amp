@@ -1,4 +1,4 @@
-import type { AMPConversation, AMPMessage, AMPExport, AMPSource } from '@purmemo.ai/schema'
+import type { AMPConversation, AMPMessage, AMPExport, AMPSource, AMPContentPart } from '@purmemo.ai/schema'
 import { AMP_VERSION } from '@purmemo.ai/schema'
 import { normalizeTimestamp } from './utils.js'
 
@@ -91,16 +91,32 @@ export function convertPerplexityConversation(
         model: null,
         parent_id: i > 0 ? makeId(convIndex, i - 1, 'assistant') : null,
         metadata: {},
+        content_parts: [{ type: 'text', text: pair.query.trim() }] as AMPContentPart[],
       })
     }
 
-    // Assistant turn — attach citations as sources
+    // Assistant turn — attach citations as sources (L2) and citation parts (L3)
     if (pair.answer?.trim()) {
       const sources = normalizeCitations(pair.citations)
+      const answerText = pair.answer.trim()
+
+      // Build L3 content_parts: text + citation parts
+      const content_parts: AMPContentPart[] = [{ type: 'text', text: answerText }]
+      if (pair.citations && pair.citations.length > 0) {
+        for (const c of pair.citations) {
+          content_parts.push({
+            type: 'citation',
+            url: typeof c.url === 'string' ? c.url : null,
+            title: typeof c.title === 'string' ? c.title : null,
+            snippet: typeof c.snippet === 'string' ? c.snippet : null,
+          })
+        }
+      }
+
       const msg: AMPMessage = {
         id: makeId(convIndex, i, 'assistant'),
         role: 'assistant',
-        content: pair.answer.trim(),
+        content: answerText,
         platform: 'perplexity',
         timestamp: normalizeTimestamp(pair.created_at),
         model: null,
@@ -108,6 +124,7 @@ export function convertPerplexityConversation(
         metadata: {
           mode: raw.mode ?? null,
         },
+        content_parts,
       }
       if (sources) msg.sources = sources
       messages.push(msg)
@@ -125,6 +142,7 @@ export function convertPerplexityConversation(
     updated_at: null,
     source_format: 'perplexity-export-v1',
     amp_version: AMP_VERSION,
+    observed_at: new Date().toISOString(),
   }
 }
 
